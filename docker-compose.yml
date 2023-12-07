@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  node-express-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${PORT:-3000}:3005
+    volumes:
+      - app_data:/app/data
+      - /Users/mark/kuber-server:/usr/src/app
+    environment:
+      - NODE_ENV=development
+      - PORT=${PORT:-3000}
+      - REDIS_URL=${REDIS_URL:-redis://redis-session-store:6379}
+      - SESSION_SECRET=${SESSION_SECRET:-secret}
+      - SESSION_SAME_SITE=${SESSION_SAME_SITE:-lax}
+    depends_on:
+      - redis-session-store
+    command: npm run dev
+
+  redis-session-store:
+    image: "redis"
+
+volumes:
+  app_data:
