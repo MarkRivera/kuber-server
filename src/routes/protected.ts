@@ -4,7 +4,6 @@ import ProfileController from "../controller/profile";
 import DashboardController from "../controller/dashboard";
 
 const router = Router();
-
 router.use(authenticate);
 
 router.get("/api/v1/profile", ProfileController.getProfile);

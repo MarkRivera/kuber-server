@@ -1,16 +1,18 @@
-import { Request, Response } from "express";
-
+import { NextFunction, Request, Response } from "express";
+import AuthService from "../service/auth";
 export default class AuthController {
-  static login(req: Request, res: Response) {
-    const user = {
-      id: "1",
-    };
+  static async login(req: Request, res: Response, next: NextFunction) {
+    const { email, password } = req.body;
 
-    // Assume valid
-    req.session.isAuthenticated = true;
-    req.session.userId = user.id;
-
-    return res.json({ success: true });
+    try {
+      const user = await AuthService.loginUser(email, password);
+      req.session.user = user;
+      req.session.isAuthenticated = true;
+      
+      return res.json({ userId: user.id, userRoles: user.roles }); 
+    } catch (error) {
+      return next(error);
+    }
   }
 
   static logout(req: Request, res: Response) {

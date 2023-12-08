@@ -12,6 +12,7 @@ import session from "./middleware/session";
 import authRoutes from "./routes/auth";
 import publicRoutes from "./routes/public";
 import protectedRoutes from "./routes/protected";
+import cors from "./middleware/cors";
 
 const app = express();
 
@@ -22,6 +23,9 @@ app.use(express.json());
 app.use(helmet());
 app.use(cookieParser());
 app.use(morgan("dev"));
+app.options("*", cors);
+app.use(cors);
+
 app.use(session);
 
 app.use(publicRoutes);
