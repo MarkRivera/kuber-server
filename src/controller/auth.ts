@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import AuthService from "../service/auth";
+import { config } from "../config/session";
 export default class AuthController {
   static async login(req: Request, res: Response, next: NextFunction) {
     const { email, password } = req.body;
-
     try {
       const user = await AuthService.loginUser(email, password);
       req.session.user = user;
@@ -21,7 +21,7 @@ export default class AuthController {
         return res.json({ success: false });
       }
 
-      res.clearCookie("connect.sid");
+      res.clearCookie(config.sessionName);
 
       return res.json({ success: true });
     });

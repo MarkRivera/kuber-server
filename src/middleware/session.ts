@@ -12,11 +12,12 @@ export default session({
   secret: config.secret,
   saveUninitialized: false,
   resave: false,
+  name: config.sessionName,
   cookie: {
     httpOnly: true,
     secure: config.secure,
     maxAge: config.maxAge,
-    sameSite: config.sameSite,
+    sameSite: "lax",
   },
   store,
 });
