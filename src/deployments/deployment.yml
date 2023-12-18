@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+  labels:
+    app: appserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appserver
+  template:
+    metadata:
+      labels:
+        app: appserver
+    spec:
+      initContainers:
+      - name: wait-for-redis
+        image: busybox:latest
+        command: ['sh', '-c', 'until nc -z -w 1 redis-service 6379; do sleep 1; done']
+      containers:
+      - name: server
+        image: mrivera1991/kuber-server:version1
+        envFrom:
+        - secretRef:
+            name: server-secrets
+        ports:
+        - containerPort: 3005
+      imagePullSecrets:
+      - name: regcred

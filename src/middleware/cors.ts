@@ -11,6 +11,10 @@ const whitelist = new Set(explode(urls));
 
 const corsOptions = {
   origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
+    if (process.env.NODE_ENV === "development") {
+      return callback(null, true);
+    }
+
     if (whitelist.has(origin!)) {
       callback(null, true);
     } else {
